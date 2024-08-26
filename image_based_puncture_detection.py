@@ -10,7 +10,11 @@ rospy.init_node('image_puncture_detection', anonymous=True)
 time.sleep(0.5)
 
 # Load a model
-model = YOLO(
+needle_det_model = YOLO(
+    "runs/detect/train7/weights/best.pt"
+)
+
+puncture_det_model = YOLO(
     "runs/classify/mojtaba_test/weights/best.pt"
 )  # load a custom model
 
@@ -18,11 +22,23 @@ puncture_threshold = 0.8
 
 pub_puncture_flag = rospy.Publisher("PunctureFlagImage", Bool, queue_size=1)
 
+def find_and_crop(image):
+    result = needle_det_model(image)
+
+    x1, y1, x2, y2 = result[0].boxes.xyxyx.tolist()[0]
+    cropped_image = image[y1:y2, x1:x2]
+
+    return cropped_image
+
 def detect_puncture_camera(image):
     iOCT_frame = image_to_numpy(image)
     iOCT_frame = cv2.resize(iOCT_frame, (640, 480))
+
+    # crop the needle
+    cropped_image = find_and_crop(image)
+
     # Predict with the model
-    results = model(iOCT_frame)  # predict on an image
+    results = puncture_det_model(cropped_image)  # predict on an image
     puncture_prob = results[0].probs.data.cpu().numpy()[2]
     print("punture prob:", puncture_prob)
     if puncture_prob >= puncture_threshold:
