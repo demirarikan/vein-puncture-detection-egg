@@ -9,14 +9,15 @@ from image_conversion_without_using_ros import image_to_numpy
 rospy.init_node('image_puncture_detection', anonymous=True)
 time.sleep(0.5)
 
-# Load a model
+# cropping model
 needle_det_model = YOLO(
-    "runs/detect/train7/weights/best.pt"
+    "/home/demir/Desktop/vein-puncture-detection-egg/runs/detect/train7/weights/best.pt"  # TODO: change path to trained bounding box model
 )
 
+# detection classification model
 puncture_det_model = YOLO(
-    "runs/classify/mojtaba_test/weights/best.pt"
-)  # load a custom model
+    "/home/demir/Desktop/vein-puncture-detection-egg/runs/classify/cropped_detection6/weights/best.pt" # TODO: change path to trained classification model
+) 
 
 puncture_threshold = 0.8
 
