@@ -22,12 +22,18 @@ puncture_det_model = YOLO(
 puncture_threshold = 0.8
 
 pub_puncture_flag = rospy.Publisher("PunctureFlagImage", Bool, queue_size=1)
+pub_cropped_image = rospy.Publisher("CroppedImage", Image, queue_size=1)
 
 def find_and_crop(image):
     result = needle_det_model(image)
 
-    x1, y1, x2, y2 = result[0].boxes.xyxyx.tolist()[0]
+    try:
+        x1, y1, x2, y2 = result[0].boxes.xyxy.tolist()[0]
+    except IndexError:
+        print("No needle detected")
+        return image
     cropped_image = image[y1:y2, x1:x2]
+    pub_cropped_image.publish(cropped_image)
 
     return cropped_image
 
