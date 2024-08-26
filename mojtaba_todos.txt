@@ -1,0 +1,12 @@
+1. Create cropped dataset by running create_cropped_dataset.py
+
+2. train classification model on cropped dataset, run cropped_classification_train.py. Result will be saved in runs/classify/cropped_detection
+
+4. Copy 
+    "/home/demir/Desktop/vein-puncture-detection-egg/runs/detect/train7/weights/best.pt" 
+    "/home/demir/Desktop/vein-puncture-detection-egg/runs/classify/cropped_detection6/weights/best.pt" 
+
+These to microscope computer
+
+5. change paths to needle_det_model and puncture_det_model in image_based_puncture_detection.py
+ 
