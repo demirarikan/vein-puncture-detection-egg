@@ -2,3 +2,5 @@ puncture_detection_dataset
 yolov8n-cls.pt
 wandb
 __pycache__
+data
+runs
