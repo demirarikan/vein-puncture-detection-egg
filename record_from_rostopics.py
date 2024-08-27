@@ -38,6 +38,7 @@ class ros_topics:
     # self.usb_camera_sub = rospy.Subscriber("/camera/image", Image, self.get_camera_image)
     self.iOCT_camera_sub = rospy.Subscriber("/decklink/camera/image_raw", Image, self.get_iOCT_camera_image)
     self.b_scan_sub = rospy.Subscriber("/b_scan", Image, self.get_b_scan_image)
+    self.cropped_image_sub = rospy.Subscriber("/CroppedImage", Image, self.get_cropped_image)
     self.F_tip_sub = rospy.Subscriber("/eye_robot/TipForceNormGlobal", Float64, self.get_F_tip)
     self.F_tip_EMA_sub = rospy.Subscriber("/eye_robot/TipForceNormEMA_Global", Float64, self.get_F_tip_EMA)
     self.F_tip_AEWMA_sub = rospy.Subscriber("/eye_robot/TipForceNormAEWMA_Global", Float64, self.get_F_tip_AEWMA)
@@ -59,6 +60,7 @@ class ros_topics:
     self.rot_y= None
     self.rot_ziOCT_image    = None
     self.iOCT_image  = None
+    self.cropped_image  = None
     self.b_scan  = None
     self.F_tip  = None
     self.F_tip_EMA   = None
@@ -92,6 +94,10 @@ class ros_topics:
     
   def get_iOCT_camera_image(self,data):
     self.iOCT_image = data
+
+
+  def get_cropped_image(self,data):
+    self.cropped_image = data
 
   def get_b_scan_image(self,data):
     self.b_scan = data
@@ -166,6 +172,24 @@ while not rospy.is_shutdown():
     iOCT_save_name = os.path.join(ep_dir, "iOCT_image_{:.10f}.jpg".format(rt.time_puncture))
     # write the image
     cv2.imwrite(iOCT_save_name, iOCT_frame) # UNCOMMENT ME WHEN DEBUGGING IS OVER (early)
+
+
+    # save cropped image
+    cropped_image_frame = bridge.imgmsg_to_cv2(rt.cropped_image, desired_encoding = 'bgr8')
+    cropped_image_frame = cv2.resize(cropped_image_frame, (640, 480))
+    # cv2.imshow('cropped_image_frame', cropped_image_frame)
+
+    # save frame
+    # iOCT_save_name = os.path.join(ep_dir, "iOCT_image_{:06d}".format(num_frames) + ".jpg")
+    cropped_image_save_name = os.path.join(ep_dir, "cropped_image_{:.10f}.jpg".format(rt.time_puncture))
+    # write the image
+    cv2.imwrite(cropped_image_save_name, cropped_image_frame) # UNCOMMENT ME WHEN DEBUGGING IS OVER (early)
+
+
+
+
+
+
 
     # save b_scan
     # b_scan_frame = bridge.imgmsg_to_cv2(rt.b_scan, desired_encoding = 'passthrough')
