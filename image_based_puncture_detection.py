@@ -2,7 +2,7 @@ import time
 import cv2
 import rospy
 from sensor_msgs.msg import Image
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Float32
 from ultralytics import YOLO
 from image_conversion_without_using_ros import image_to_numpy
 from image_conversion_without_using_ros import numpy_to_image
@@ -23,6 +23,7 @@ puncture_det_model = YOLO(
 puncture_threshold = 0.8
 
 pub_puncture_flag = rospy.Publisher("PunctureFlagImage", Bool, queue_size=1)
+pub_puncture_prob = rospy.Publisher("PunctureProbabilityImage", Float32, queue_size=1)
 pub_cropped_image = rospy.Publisher("CroppedImage", Image, queue_size=1)
 
 def find_and_crop(image):
@@ -51,6 +52,7 @@ def detect_puncture_camera(image):
     # Predict with the model
     results = puncture_det_model(cropped_image)  # predict on an image
     puncture_prob = results[0].probs.data.cpu().numpy()[2]
+    pub_puncture_prob.publish(puncture_prob)
     print("punture prob:", puncture_prob)
     if puncture_prob >= puncture_threshold:
         puncture_flag = True
