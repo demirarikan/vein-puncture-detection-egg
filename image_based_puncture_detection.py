@@ -7,9 +7,6 @@ from ultralytics import YOLO
 from image_conversion_without_using_ros import image_to_numpy
 from image_conversion_without_using_ros import numpy_to_image
 
-
-# THIS IS A TEST CHANGE FOR MOJTABA
-
 global iOCT_frame
 
 PUNCTURE_THRESHOLD = 0.8
