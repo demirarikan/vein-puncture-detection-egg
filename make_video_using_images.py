@@ -11,7 +11,7 @@ def natural_sort_key(s):
             for text in re.split(_nsre, s)]
 
 
-image_folder = '_recordings/egg_05/03_TP_bleeding_highQuality'
+image_folder = '_recordings/Egg6_04_FN_bleeding'
 video_name = 'concatenate.mkv'
 
 images = sorted([img for img in os.listdir(image_folder) if img.endswith('.jpg')], key=natural_sort_key)

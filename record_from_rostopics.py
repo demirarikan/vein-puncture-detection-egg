@@ -95,7 +95,6 @@ class ros_topics:
   def get_iOCT_camera_image(self,data):
     self.iOCT_image = data
 
-
   def get_cropped_image(self,data):
     self.cropped_image = data
 
@@ -175,7 +174,7 @@ while not rospy.is_shutdown():
 
 
     # save cropped image
-    cropped_image_frame = bridge.imgmsg_to_cv2(rt.cropped_image, desired_encoding = 'bgr8')
+    cropped_image_frame = bridge.imgmsg_to_cv2(rt.cropped_image, desired_encoding = 'rgb8')
     cropped_image_frame = cv2.resize(cropped_image_frame, (640, 480))
     # cv2.imshow('cropped_image_frame', cropped_image_frame)
 
